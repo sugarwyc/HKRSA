@@ -28,7 +28,7 @@
 }
 
 - (void)test {
-    HKRSA *rsa = [[HKRSA alloc] init];
+    HKRSA *rsa = [HKRSA sharedInstance];
     [rsa loadPKFromFile:[[NSBundle mainBundle] pathForResource:@"public_key" ofType:@"der"]];
     [rsa loadSKFromFile:[[NSBundle mainBundle] pathForResource:@"private_key" ofType:@"p12"] password:@"123456"];
     NSString *rawString = @"CFNumberRef keySize = CFNumberCreate(kCFAllocatorDefault, kCFNumberSInt32Type, &iKeySize);";

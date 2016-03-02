@@ -24,7 +24,7 @@ typedef NS_ENUM(NSInteger, HKAbstractType){
 
 @interface HKRSA : NSObject
 
-- (instancetype)sharedInstance;
++ (instancetype)sharedInstance;
 
 - (void)loadPKFromFile:(NSString *)PKFilePath;
 - (void)loadSKFromFile:(NSString *)SKFilePath password:(NSString *)password;

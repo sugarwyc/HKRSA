@@ -13,7 +13,7 @@ typedef NS_ENUM(NSInteger, HKAbstractType){
     HKAbstractType_MD2,
 //    HKAbstractType_MD4,//不能用于签名、验证操作
     HKAbstractType_MD5,
-    
+
     //SHA
     HKAbstractType_SHA1,
     HKAbstractType_SHA224,
@@ -24,7 +24,7 @@ typedef NS_ENUM(NSInteger, HKAbstractType){
 
 @interface HKRSA : NSObject
 
-- (instancetype)sharedInstance;
++ (instancetype)sharedInstance;
 
 - (void)loadPKFromFile:(NSString *)PKFilePath;
 - (void)loadSKFromFile:(NSString *)SKFilePath password:(NSString *)password;
@@ -43,21 +43,21 @@ typedef NS_ENUM(NSInteger, HKAbstractType){
 
 
 /**
- 
+
  openssl genrsa -out private_key.pem 1024
- 
+
  openssl req -new -key private_key.pem -out rsaCertReq.csr
- 
+
  openssl x509 -req -days 3650 -in rsaCertReq.csr -signkey private_key.pem -out rsaCert.crt
- 
+
  openssl x509 -outform der -in rsaCert.crt -out public_key.der　　　　　　　　　　　　　　　// Create public_key.der For IOS
- 
+
  openssl pkcs12 -export -out private_key.p12 -inkey private_key.pem -in rsaCert.crt　　// Create private_key.p12 For IOS. 这一步，请记住你输入的密码，IOS代码里会用到
- 
+
  openssl rsa -in private_key.pem -out rsa_public_key.pem -pubout　　　　　　　　　　　　　// Create rsa_public_key.pem For Java
  　
  openssl pkcs8 -topk8 -in private_key.pem -out pkcs8_private_key.pem -nocrypt　　　　　// Create pkcs8_private_key.pem For Java
- 
+
  */
 
 /*

@@ -34,7 +34,7 @@ static NSData *base64_decode(NSString *str){
     CFRelease(SK);
 }
 
-- (instancetype)sharedInstance {
++ (instancetype)sharedInstance {
     static HKRSA *hkRSA = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -131,13 +131,13 @@ static NSData *base64_decode(NSString *str){
     size_t plainLen = SecKeyGetBlockSize(key) - 12;
     void *plain = malloc(plainLen);
     OSStatus status = SecKeyDecrypt(key, kSecPaddingPKCS1, cipher, cipherLen, plain, &plainLen);
-    
+
     if (status != noErr) {
         return nil;
     }
-    
+
     NSData *decryptedData = [[NSData alloc] initWithBytes:(const void *)plain length:plainLen];
-    
+
     return decryptedData;
 }
 
@@ -157,7 +157,7 @@ static NSData *base64_decode(NSString *str){
 - (NSData *)signData:(NSData *)rawData withPadding:(SecPadding)padding{
     size_t hashSize = SecKeyGetBlockSize([self getSK]);
     uint8_t *bytes = malloc(hashSize);
-    
+
     OSStatus err = SecKeyRawSign([self getSK],
                                  padding,
                                  [rawData bytes],
@@ -165,7 +165,7 @@ static NSData *base64_decode(NSString *str){
                                  bytes,
                                  &hashSize);
     NSAssert(err == errSecSuccess, @"SecKeyRawSign failed: %d", (int)err);
-    
+
     return [NSData dataWithBytesNoCopy:bytes length:hashSize];
     return nil;
 }
@@ -180,7 +180,7 @@ static NSData *base64_decode(NSString *str){
 
 #pragma mark - private methods
 - (SecKeyRef)getPKRefrenceFromData: (NSData*)PKData {
-    
+
     SecCertificateRef PKCertificate = SecCertificateCreateWithData(kCFAllocatorDefault, (__bridge CFDataRef)PKData);
     SecPolicyRef myPolicy = SecPolicyCreateBasicX509();
     SecTrustRef myTrust;
@@ -193,7 +193,7 @@ static NSData *base64_decode(NSString *str){
     CFRelease(PKCertificate);
     CFRelease(myPolicy);
     CFRelease(myTrust);
-    
+
     return tempPK;
 }
 
@@ -212,7 +212,7 @@ static NSData *base64_decode(NSString *str){
         }
     }
     CFRelease(items);
-    
+
     return tempSK;
 }
 
@@ -220,7 +220,7 @@ static NSData *base64_decode(NSString *str){
     size_t hashBytesSize = [HKRSA abstractLengthWithType:abstractType];
     uint8_t* hashBytes = malloc(hashBytesSize);
     unsigned char * (*func)(const void *data, CC_LONG len, unsigned char *md)  = [HKRSA abstractFunctionWithType:abstractType];
-    
+
     if (!func([rawData bytes], (CC_LONG)[rawData length], hashBytes)) {
         return nil;
     }else{
@@ -251,7 +251,7 @@ static NSData *base64_decode(NSString *str){
         case HKAbstractType_SHA512:
             return CC_SHA512_DIGEST_LENGTH;
             break;
-            
+
         default:
             break;
     }
@@ -281,7 +281,7 @@ static NSData *base64_decode(NSString *str){
         case HKAbstractType_SHA512:
             return CC_SHA512;
             break;
-            
+
         default:
             break;
     }
@@ -311,7 +311,7 @@ static NSData *base64_decode(NSString *str){
         case HKAbstractType_SHA512:
             return kSecPaddingPKCS1SHA512;
             break;
-            
+
         default:
             break;
     }
